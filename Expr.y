@@ -1,6 +1,7 @@
 %{
 
 #include <stdio.h>
+#include <ctype.h>
 
 int  yylex(void);
 
@@ -11,6 +12,8 @@ void yyerror(const char *s);
 %}
 
 %start input
+
+%token NUM
 
 %%
 
@@ -28,16 +31,7 @@ term   : term '*' factor { $$ = $1 * $3; }
        ;
 
 factor : '(' expr ')'    { $$ = $2; }
-       | '0'             { $$ = 0; }
-       | '1'             { $$ = 1; }
-       | '2'             { $$ = 2; }
-       | '3'             { $$ = 3; }
-       | '4'             { $$ = 4; }
-       | '5'             { $$ = 5; }
-       | '6'             { $$ = 6; }
-       | '7'             { $$ = 7; }
-       | '8'             { $$ = 8; }
-       | '9'             { $$ = 9; }
+       | NUM
        ;
 
 %%
@@ -47,5 +41,12 @@ yylex()
   int c;
 
   while ((c = getchar()) == ' ');
-  return c;
+  if (isdigit(c)) {
+    yylval = c - '0';
+    while (isdigit(c = getchar()))
+      yylval = yylval * 10 + (c-'0');
+    ungetc(c, stdin);
+    return NUM;
+  }else 
+    return c;
 }
