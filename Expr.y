@@ -24,7 +24,8 @@ void yyerror(const char *s);
 %%
 
 input  : 
-       | input expr '\n'       { printf("%d\n", $2); }
+       | input expr '\n'        { printf("%d\n", $2); }
+       | input error '\n'       { yyerrok; }
        ;
 
 expr   : expr '+' expr          { $$ = $1 + $3; }
