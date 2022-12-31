@@ -13,40 +13,28 @@ void yyerror(const char *s);
 
 %start input
 
-%token NUM
-
 %%
 
-input  : expr '\n'       { printf("%d\n", $1); }
+input  : expr '\n'  
        ;
 
-expr   : expr '+' term   { $$ = $1 + $3; }
-       | expr '-' term   { $$ = $1 - $3; }
+expr   : expr '+' term
+       | expr '-' term
        | term
        ;
 
-term   : term '*' factor { $$ = $1 * $3; }
-       | term '/' factor { $$ = $1 / $3; }
+term   : term '*' factor
+       | term '/' factor
        | factor
        ;
 
-factor : '(' expr ')'    { $$ = $2; }
-       | NUM
+factor : 'i'
+       | '(' expr ')'
        ;
 
 %%
 
 yylex()
 {
-  int c;
-
-  while ((c = getchar()) == ' ');
-  if (isdigit(c)) {
-    yylval = c - '0';
-    while (isdigit(c = getchar()))
-      yylval = yylval * 10 + (c-'0');
-    ungetc(c, stdin);
-    return NUM;
-  }else 
-    return c;
+  return getchar();
 }
