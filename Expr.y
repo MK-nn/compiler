@@ -1,20 +1,30 @@
 %{
 
-#include <stdio.h>
-#include <ctype.h>
 #include <math.h>
-
-int  yylex(void);
+#include <stdio.h>
 
 int yyparse(void);
 
 void yyerror(const char *s);
 
+#define M_SIZE 16
+double Memory[M_SIZE];
+
 %}
 
 %start input
 
-%token NUM UMINUS
+%union{
+  int    ival;
+  double rval;
+}
+
+%token MEM UMINUS
+%token <ival> INTC;
+%token <rval> REALC;
+
+%type <ival> mcell;
+%type <rval> expr;
 
 %left '+' '-'
 %left '*' '/'
@@ -24,33 +34,40 @@ void yyerror(const char *s);
 %%
 
 input  : 
-       | input expr '\n'        { printf("%d\n", $2); }
+       | input expr '\n'        { printf("%f\n", $2); }
        | input error '\n'       { yyerrok; }
        ;
 
-expr   : expr '+' expr          { $$ = $1 + $3; }
+expr   : mcell '=' expr         { $$ = Memory[$1] = $3; }
+       | expr '+' expr          { $$ = $1 + $3; }
        | expr '-' expr          { $$ = $1 - $3; }
        | expr '*' expr          { $$ = $1 * $3; }
        | expr '/' expr          { $$ = $1 / $3; }
        | expr '^' expr          { $$ = pow($1, $3); }
        | '-' expr %prec UMINUS  { $$ = -$2; }
        | '(' expr ')'           { $$ = $2; }
-       | NUM
+       | mcell                  { $$ = Memory[$1]; }
+       | INTC                   { $$ = (double)$1; }
+       | REALC                  { $$ = $1; }
+       ;
+
+mcell  : MEM '[' INTC ']'       { if ($3 >= 0 && $3 <= M_SIZE)
+                                    $$ = $3;
+                                  else {
+                                    printf("Memory Fault\n");
+                                    $$ = 0;
+                                  }
+                                }
        ;
 
 %%
 
-yylex()
+main()
 {
-  int c;
+  yyparse();
+}
 
-  while ((c = getchar()) == ' ');
-  if (isdigit(c)) {
-    yylval = c - '0';
-    while (isdigit(c = getchar()))
-      yylval = yylval * 10 + (c-'0');
-    ungetc(c, stdin);
-    return NUM;
-  }else 
-    return c;
+yyerorr(char *msg)
+{
+  printf("%s\n", msg);
 }
