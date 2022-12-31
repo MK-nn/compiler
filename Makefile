@@ -7,8 +7,9 @@ no_arg:
 .PHONY: compile
 .PHONY: clean
 compile:
-	bison -y Expr.y
-	gcc y.tab.c -ly
+	bison -dv -y Expr.y
+	flex -l Expr.l
+	gcc y.tab.c lex.yy.c -ly -ll -lm
 
 clean:
 	rm -f y.tab.c y.tab.h a.out
