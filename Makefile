@@ -1,14 +1,30 @@
 no_arg:
 	@echo '以下のように実行してください'
-	@echo 'make compile'
+	@echo 'make <コンパイルしたいもの(ex. calc1, calc2)>'
 	@echo 'or'
 	@echo 'make clean'
 
-.PHONY: compile
+.PHONY: calc1
+.PHONY: calc2
+.PHONY: calc3
+.PHONY: calc4
 .PHONY: clean
-compile:
-	bison -dv -y Expr.y
-	flex -l Expr.l
+
+calc1:
+	bison -y calc1.y
+	gcc y.tab.c -ly
+
+calc2:
+	bison -y calc2.y
+	gcc y.tab.c -ly
+
+calc3:
+	bison -y calc3.y
+	gcc y.tab.c -ly
+
+calc4:
+	bison -dv -y calc4.y
+	flex -l calc4.l
 	gcc y.tab.c lex.yy.c -ly -ll -lm
 
 clean:
