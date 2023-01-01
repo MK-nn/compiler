@@ -8,6 +8,7 @@ no_arg:
 .PHONY: calc2
 .PHONY: calc3
 .PHONY: calc4
+.PHONY: calc5
 .PHONY: clean
 
 calc1:
@@ -25,6 +26,11 @@ calc3:
 calc4:
 	bison -dv -y calc4.y
 	flex -l calc4.l
+	gcc y.tab.c lex.yy.c -ly -ll -lm
+
+calc5:
+	bison -dv -y calc5.y
+	flex -l calc5.l
 	gcc y.tab.c lex.yy.c -ly -ll -lm
 
 clean:
