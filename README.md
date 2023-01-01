@@ -18,6 +18,10 @@ $make calc3
 // 四則演算の結果をメモリにに保存できる
 // ex. M[0] = 1 + 1, (M[0]で2が出力される)
 $make calc4 
+
+// log exp sqrt の計算を追加した
+// ex. sqrt(4), log(exp(4))
+$make calc5
 ```
 
 - 不要なファイルの削除
