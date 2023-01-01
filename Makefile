@@ -12,25 +12,25 @@ no_arg:
 .PHONY: clean
 
 calc1:
-	bison -y calc1.y
+	bison -y calc/calc1.y
 	gcc y.tab.c -ly
 
 calc2:
-	bison -y calc2.y
+	bison -y calc/calc2.y
 	gcc y.tab.c -ly
 
 calc3:
-	bison -y calc3.y
+	bison -y calc/calc3.y
 	gcc y.tab.c -ly
 
 calc4:
-	bison -dv -y calc4.y
-	flex -l calc4.l
+	bison -dv -y calc/calc4.y
+	flex -l calc/calc4.l
 	gcc y.tab.c lex.yy.c -ly -ll -lm
 
 calc5:
-	bison -dv -y calc5.y
-	flex -l calc5.l
+	bison -dv -y calc/calc5.y
+	flex -l calc/calc5.l
 	gcc y.tab.c lex.yy.c -ly -ll -lm
 
 clean:
